@@ -33,7 +33,7 @@ namespace Oxide.Plugins
 
         #region Methods
 
-        private IEnumerator Delete(IEnumerable<BaseNetworkable> list, string userId, ItemCategory category = ItemCategory.All, Item item = null)
+        private IEnumerator Delete(IEnumerable<BaseNetworkable> list, string userId, ItemCategory? category = null, Item item = null)
         {
             var count = 0;
             foreach (var listEntry in list)
@@ -41,19 +41,19 @@ namespace Oxide.Plugins
                 var droppedItem = listEntry.GetComponent<DroppedItem>();
                 if (droppedItem != null)
                 {
-                    if (category != ItemCategory.All && droppedItem.item.info.category.Equals(category))
+                    if (item == null && category == null)
                     {
                         count++;
                         droppedItem.Kill();
                         yield return new WaitWhile(() => !droppedItem.IsDestroyed);
                     }
-                    else if (item != null && droppedItem.item.Equals(item))
+                    if (item != null && droppedItem.item.info.shortname == item.info.shortname)
                     {
                         count++;
                         droppedItem.Kill();
                         yield return new WaitWhile(() => !droppedItem.IsDestroyed);
                     }
-                    else
+                    if (category != null && droppedItem.item.info.category.Equals(category))
                     {
                         count++;
                         droppedItem.Kill();
